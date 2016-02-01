@@ -79,6 +79,7 @@ def change_item():
     if usr_inpt == 'n':
         inven_dict[i].change_name(str(raw_input("Please enter a new name for the item: ")))
         print "The new name of the item is: %s" %inven_dict[i].get_name()
+        # Changes the name, but does not change the dictionary entry. Will throw an error.
     elif usr_inpt == 'c':
         print "How would you like to change the count?"
         cnt_chng = str(raw_input("Enter '+' to add one to the count. Enter '-' to subtract one. Enter 't' to change the total count: "))
