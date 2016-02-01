@@ -6,45 +6,10 @@
 # takes you back to the main menu, which is frustrating and adds a lot of work. A GUI would help in
 # this regard as well. Look into adding SQL capabilities. 
 
-#this class defines the inventory item
-class item(object):
-    
-    def __init__(self, name, count):
-        self.name = name
-        self.count = count
-        self.loc = "No location has been set yet"
-    
-    def __str__(self):
-        return " Item Name: " + self.name + "\n Current Count: " + str(self.count) + "\n Current Location: " + self.loc
-    
-    def change_name(self, new_name):
-        self.name = new_name
-    
-    def add_one(self):
-        self.count = self.count + 1
-    
-    def set_total(self, total):
-        self.count = total
-    
-    def remove_one(self):
-        self.count = self.count - 1
-    
-    def change_loc(self, new_loc):
-        self.loc = new_loc
-    
-    def get_name(self):
-    	return self.name
-    
-    def get_count(self):
-    	return self.count
-    
-    def get_loc(self):
-    	return self.loc
-
 #prompts the user for an item name when adding a new item to the inventory
 def get_new_item_name():
-    n = str(raw_input("What is the NAME of the new item? \n"))
-    print "The name of the new item is %s." % n
+    n = str(raw_input("What is the name of the item? \n"))
+    print "The name of the item is %s." % n
     return n
 
 #prompts the user for an initial count of the item when adding a new item to the inventory
@@ -62,39 +27,71 @@ inven_dict = {}
 #creates a new item and adds it to the dictionary
 def add_item():
     new_name = get_new_item_name()
-    inven_dict[new_name] = item(new_name, get_new_item_count(new_name))
+    new_count = get_new_item_count(new_name)
+    inven_dict[len(inven_dict)] = {"Name: ":new_name, "Count: ":new_count, "Location: ":"No location set yet"}
 
 #allows the user to view an item of their choice
 def view_item():
-    i = raw_input("Which item would you like to view? \n")
-    #need to add a validity check here, to make sure i is in inven_dict
-    print inven_dict[i]
+    for x in inven_dict:
+        print "%i: %s" % (x, inven_dict[x]["Name: "])
+    # Needs an if/else statement, to determine if there are any items in the inv
+    # Cannot have the input immediately stored as int. Must make sure that it isdigit first. 
+    i = int(raw_input("Please enter the number of the item you would like to view: "))
+    while inven_dict.has_key(i) == False:
+        print "Sorry, that is not a valid item. Please try again. \n"
+        ui = raw_input("Please enter the number of the item you would like to view: ")
+        if ui.isdigit() == False:
+            if ui == 'q':
+                break
+            else:
+                print "Sorry, that is not a valid item. Please try again. \n"
+        else:
+            i = int(ui)
+    else:
+        print str(inven_dict[i])
 
 #allows user to modify an already created item
 def change_item():
-    #need to add a validity check here, to make sure i is in inven_dict
-    i = raw_input("Which item would you like to change? \n")
-    print "You are updating %s. How would you like to update it?" %inven_dict[i].get_name()
+    iter = 0
+    for x in inven_dict:
+        print "%i: %s" % (x, inven_dict[x]["Name: "])
+        iter += 1
+    if iter == 0:
+        print "There are no items in the inventory yet."
+    # everything after needs to be in an else statement. if no items in inv, doesn't ask.
+    #cannot have the input immediately stored as int. Must make sure that it isdigit first.
+    i = int(raw_input("Please enter the number of the item you would like to update: "))
+    while inven_dict.has_key(i) == False:
+        print "Sorry, that is not a valid item. Please try again. \n"
+        ui = raw_input("Please enter the number of the item you would like to update: ")
+        if ui.isdigit() == False:
+            if ui == 'q':
+                break
+            else:
+                print "sorry, that is not a valid item. Please try again. \n"
+        else:
+            i = int(ui)
+    else:
+        print "You are updating " + inven_dict[i]["Name: "] +  ". How would you like to update it? \n"
     usr_inpt = str(raw_input("Enter 'n' to change the name. Enter 'c' to change the count. Enter 'l' to change the location: "))
     if usr_inpt == 'n':
-        inven_dict[i].change_name(str(raw_input("Please enter a new name for the item: ")))
-        print "The new name of the item is: %s" %inven_dict[i].get_name()
-        # Changes the name, but does not change the dictionary entry. Will throw an error.
+        inven_dict[i]["Name: "] = get_new_item_name()
     elif usr_inpt == 'c':
         print "How would you like to change the count?"
         cnt_chng = str(raw_input("Enter '+' to add one to the count. Enter '-' to subtract one. Enter 't' to change the total count: "))
         if cnt_chng == '+':
-            inven_dict[i].add_one()
+           inven_dict[i]["Count: "] += 1
         elif cnt_chng == '-':
-            inven_dict[i].remove_one()
+            inven_dict[i]["Count: "] -= 1
         elif cnt_chng == 't':
+            print "testing"
             #needs to check if input actually is an int
-            inven_dict[i].set_total(int(raw_input("Please enter the new total count as a whole number: ")))
+            #inven_dict[i].set_total(int(raw_input("Please enter the new total count as a whole number: ")))
         else:
             print "That is not a valid response."
-        print "The count of %s is now %i." % (inven_dict[i].get_name(), inven_dict[i].get_count())
+        print "The count of %s is now %i." % (inven_dict[i]["Name: "], inven_dict[i]["Count: "])
     elif usr_inpt == 'l':
-        inven_dict[i].change_loc(str(raw_input("Please enter the new location of the item: ")))
+        inven_dict[i]["Location: "] = raw_input("Please enter the new location of the item: ")
     else:
         print "That is not a valid response." 
 
@@ -111,7 +108,7 @@ Enter 'q' to quit.
 Enter 'h' to see these instructions again. """)
 
 #prints welcome message and the instructions
-print "Hello, and welcome to your inventory!"
+print "Hello, and welcome to your inventory, V.2!"
 print instruct
 
 #main program loop
@@ -124,13 +121,14 @@ while inven_run:
     elif answer == 'a':
 	add_item()
     elif answer == 'va':
-        print inven_dict.keys()
+        for x in inven_dict:
+            print "%i: %s" % (x, inven_dict[x])
     elif answer == 'v':
         view_item()
     elif answer == 'c':
         change_item()
-    elif answer == "printdict":
-    	print inven_dict
+   # elif answer == "printdict":
+    #	print inven_dict
     else:
     	print "testing"
 
