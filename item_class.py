@@ -7,7 +7,7 @@ class Item(object):
         self.loc = "No location has been set yet"
     
     def __str__(self):
-        return " Item Name: " + self.name + "\n Current Count: " + str(self.count) + "\n Current Location: " + self.loc
+        return "\n Item Name: " + self.name + "\n Current Count: " + str(self.count) + "\n Current Location: " + self.loc + "\n"
     
     def change_name(self, new_name):
         self.name = new_name

@@ -13,6 +13,45 @@ import item_class
 #initializes a dictionary of the inventory items
 inven_dict = {}
 
+def check_key_is_int(ukey):
+    while ukey.isdigit() == False:
+        if ukey == 'q':
+            break
+        else:
+            print "Sorry, that is not a valid number. Please try again. \n"
+            ukey = raw_input("Please enter the number of the item you would like to access, or 'q' to quit: ")
+    return ukey
+
+def check_key_in_dict(ukey):
+    while inven_dict.has_key(ukey) == False:
+        print "Sorry, that is not a valid item. Please try again. \n"
+        ukey = raw_input("Please enter the number of the item you would like to access, or 'q' to quit: ")
+        if ukey == 'q':
+            break
+        else:
+            ukey = check_key_is_int(ukey)
+            if ukey == 'q':
+                break
+            else:
+                ukey = int(ukey)
+    return ukey
+
+def sanatize_key(ukey):
+    ukey2 = check_key_is_int(ukey)
+    print "You have entered a number. Checking if that number is valid..."
+    if ukey2 == 'q':
+        print "You have chosen to quit. "
+        return ukey2
+    else:
+        ukey3 = check_key_in_dict(int(ukey2))
+        if ukey3 == 'q':
+            print "You have chosen to quit. "
+            return ukey3
+        else:
+            ukey3 = int(ukey3)
+            print "You have entered %i." % ukey3
+            return ukey3
+
 #prompts the user for an item name when adding a new item to the inventory
 def get_new_item_name():
     n = str(raw_input("What is the name of the item? \n"))
@@ -33,64 +72,64 @@ def add_item():
     new_name = get_new_item_name()
     new_count = get_new_item_count(new_name)
     new_item = item_class.Item(new_name, new_count)
-    inven_dict[new_name] = new_item
+    inven_dict[len(inven_dict)+1] = new_item
 
 #allows the user to view an item of their choice
 def view_item():
     ls_cnt = 1
     for x in inven_dict:
-        print "%i: %s" % (ls_cnt, inven_dict[x].get_name())
+        print "%i: %s" % (x, inven_dict[x].get_name())
         ls_cnt += 1
-    # Needs an if/else statement, to determine if there are any items in the inv
-    s = str(raw_input("Please enter the name of the item you would like to view: "))
-    while inven_dict.has_key(s) == False:
-        print "Sorry, that is not a valid item. Please try again. \n"
-        ui = str(raw_input("Please enter the name of the item you would like to view, or 'q' to quit: "))
-        if ui == 'q':
-            break
-        s = ui
+    if len(inven_dict) == 0:
+        print "There are currently no items in your inventory."
     else:
-        print inven_dict[s].__str__()
+        i = raw_input("Please enter the number of the item you would like to view: ")
+        i = sanatize_key(i)
+        if i == 'q':
+            print "Retuning to main menu...."
+        else:
+            print inven_dict[i].__str__()
 
 #allows user to modify an already created item
 def change_item():
     ls_cnt = 0
     for x in inven_dict:
-        print "%i: %s" % (ls_cnt+1, x)
+        print "%i: %s" % (x, inven_dict[x].get_name())
         ls_cnt += 1
-    if ls_cnt == 0:
-        print "There are no items in the inventory yet."
+    if len(inven_dict) == 0:
+        print "There are currently no items in your inventory."
     # everything after needs to be in an else statement. if no items in inv, doesn't ask.
     #cannot have the input immediately stored as int. Must make sure that it isdigit first.
-    i = str(raw_input("Please enter the name of the item you would like to update: "))
-    while inven_dict.has_key(i) == False:
-        print "Sorry, that is not a valid item. Please try again. \n"
-        ui = str(raw_input("Please enter the name of the item you would like to update, or 'q' to quit: "))
-        if ui == 'q':
-            break
-        else:
-            i = ui
     else:
-        print "You are updating " + inven_dict[i].get_name() +  ". How would you like to update it? \n"
-    usr_inpt = str(raw_input("Enter 'n' to change the name. Enter 'c' to change the count. Enter 'l' to change the location: "))
-    if usr_inpt == 'n':
-        inven_dict[i].change_name(get_new_item_name())
-    elif usr_inpt == 'c':
-        print "How would you like to change the count?"
-        cnt_chng = str(raw_input("Enter '+' to add one to the count. Enter '-' to subtract one. Enter 't' to change the total count: "))
-        if cnt_chng == '+':
-            inven_dict[i].add_one()
-        elif cnt_chng == '-':
-            inven_dict[i].remove_one()
-        elif cnt_chng == 't':
-            inven_dict[i].set_total(get_new_item_count(inven_dict[i].get_name()))
+        i = str(raw_input("Please enter the name of the item you would like to update: "))
+        while inven_dict.has_key(i) == False:
+            print "Sorry, that is not a valid item. Please try again. \n"
+            ui = str(raw_input("Please enter the name of the item you would like to update, or 'q' to quit: "))
+            if ui == 'q':
+                break
+            else:
+                i = ui
         else:
-            print "That is not a valid response."
-        print "The count of %s is now %i." % (inven_dict[i].get_name(), inven_dict[i].get_count())
-    elif usr_inpt == 'l':
-        inven_dict[i].change_loc(str(raw_input("Please enter the new location of the item: ")))
-    else:
-        print "That is not a valid response." 
+            print "You are updating " + inven_dict[i].get_name() +  ". How would you like to update it? \n"
+        usr_inpt = str(raw_input("Enter 'n' to change the name. Enter 'c' to change the count. Enter 'l' to change the location: "))
+        if usr_inpt == 'n':
+            inven_dict[i].change_name(get_new_item_name())
+        elif usr_inpt == 'c':
+            print "How would you like to change the count?"
+            cnt_chng = str(raw_input("Enter '+' to add one to the count. Enter '-' to subtract one. Enter 't' to change the total count: "))
+            if cnt_chng == '+':
+                inven_dict[i].add_one()
+            elif cnt_chng == '-':
+                inven_dict[i].remove_one()
+            elif cnt_chng == 't':
+                inven_dict[i].set_total(get_new_item_count(inven_dict[i].get_name()))
+            else:
+                print "That is not a valid response."
+            print "The count of %s is now %i." % (inven_dict[i].get_name(), inven_dict[i].get_count())
+        elif usr_inpt == 'l':
+            inven_dict[i].change_loc(str(raw_input("Please enter the new location of the item: ")))
+        else:
+            print "That is not a valid response." 
 
 #allows the while loop to begin
 inven_run = True
