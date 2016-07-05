@@ -4,10 +4,6 @@
 # takes you back to the main menu, which is frustrating and adds a lot of work. A GUI would help in
 # this regard as well.
 
-# Currently, modifying the item name does not change the dictionary key to which it is bound. This
-# presents problems for accessing the item after changing the name. Consider making the key a numeric
-# entry.
-
 import item_class
 
 #initializes a dictionary of the inventory items
