@@ -131,41 +131,42 @@ def change_item():
         else:
             print "That is not a valid response." 
 
-#allows the while loop to begin
-inven_run = True
+if __name__ == "__main__":
+    #allows the while loop to begin
+    inven_run = True
+    
+    #set of instructions for the user
+    instruct = ("""Enter 'a' to add an item. 
+    Enter 'c' to change an item. 
+    Enter 'r' to remove an item. 
+    Enter 'v' to view an item. 
+    Enter 'va' to view all items currently in inventory. 
+    Enter 'q' to quit. 
+    Enter 'h' to see these instructions again. """)
+    
+    #prints welcome message and the instructions
+    print "Hello, and welcome to your inventory, V.2!"
+    print instruct
 
-#set of instructions for the user
-instruct = ("""Enter 'a' to add an item. 
-Enter 'c' to change an item. 
-Enter 'r' to remove an item. 
-Enter 'v' to view an item. 
-Enter 'va' to view all items currently in inventory. 
-Enter 'q' to quit. 
-Enter 'h' to see these instructions again. """)
+    #main program loop
+    while inven_run:
+        answer = raw_input("Please enter a command: ")
+        if answer == 'q':
+    	    inven_run = False
+        elif answer == 'h':
+    	    print instruct
+        elif answer == 'a':
+	    add_item()
+        elif answer == 'va':
+            for x in inven_dict:
+                print inven_dict[x].get_count(), inven_dict[x].get_name()
+        elif answer == 'v':
+            view_item()
+        elif answer == 'c':
+            change_item()
+        # elif answer == "printdict":
+        #	print inven_dict
+        else:
+    	    print "testing"
 
-#prints welcome message and the instructions
-print "Hello, and welcome to your inventory, V.2!"
-print instruct
-
-#main program loop
-while inven_run:
-    answer = raw_input("Please enter a command: ")
-    if answer == 'q':
-    	inven_run = False
-    elif answer == 'h':
-    	print instruct
-    elif answer == 'a':
-	add_item()
-    elif answer == 'va':
-        for x in inven_dict:
-            print inven_dict[x].get_count(), inven_dict[x].get_name()
-    elif answer == 'v':
-        view_item()
-    elif answer == 'c':
-        change_item()
-   # elif answer == "printdict":
-    #	print inven_dict
-    else:
-    	print "testing"
-
-print "Thank you!"
+    print "Thank you!"
